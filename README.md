@@ -141,20 +141,14 @@ Here’s how your full system works from top to bottom:
         │ View graphs in browser (dashboard/)    │ ← Flask + Chart.js
         └────────────────────────────────────────┘
         
-      
-        ---
-        
-        ⚠️ DISCLAIMER:
-        The Network Threat Detection System (NTDS) is intended only for educational and ethical purposes. Do NOT use this tool on real systems, networks, or data without explicit permission. Misuse can be illegal.
+    
         
         ---
         
-        🧑‍💻 AUTHOR:
-        Mohit Nigote
-        CyberSec $ Linux Enthusiast
-        📧 - mohitnigote461001@gmail.com (use real if public)
-        💻 GitHub:- ngmohit2003.
+        🧑‍💻 Owner:
+        Amit Shelke
+        CyberSecurity Enthusiast
+        📧 - amitshelke499@gmail.com (use real if public)
         x-x
-        MN.
 
 
