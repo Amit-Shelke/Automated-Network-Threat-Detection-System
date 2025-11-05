@@ -1,0 +1,86 @@
+# detection_rules.py
+
+from scapy.layers.inet import IP, TCP
+from collections import defaultdict
+import time
+from logger import log_threat
+
+# Dictionary to track SYN packets per source IP
+syn_tracker = defaultdict(list)
+
+def detect_threats(packet):
+    if packet.haslayer(IP) and packet.haslayer(TCP):
+        src_ip = packet[IP].src
+        flags = packet[TCP].flags
+
+        # Check for SYN packets (flag = "S")
+        if flags == "S":
+            current_time = time.time()
+            syn_tracker[src_ip].append(current_time)
+            print(f"[DEBUG] SYN from {src_ip} |                              detection_rules.py *                                           
+
+            # Keep only the SYNs from the last 5 seconds
+            syn_tracker[src_ip] = [t for t in syn_tracker[src_ip] if current_time - t < 5]
+
+            # If SYNs exceed 15 in 5 seconds from same IP → SYN flood likely
+            if len(syn_tracker[src_ip]) > 5:
+                log_threat("POSSIBLE SYN FLOOD", src_ip)
+
+# --- PORT SCAN DETECTION ---
+from collections import defaultdict
+
+port_scan_tracker = defaultdict(list)
+
+# This goes inside detect_threats(packet):
+if packet.haslayer(IP) and packet.haslayer(TCP):
+    src_ip = packet[IP].src
+    dst_port = packet[TCP].dport
+    current_time = time.time()
+
+    # Track accessed ports per IP
+    port_scan_tracker[src_ip].append((dst_port, current_time))
+
+    # Remove entries older than 5 seconds
+    port_scan_tracker[src_ip] = [
+        (port, t) for port, t in port_scan_tracker[src_ip] if current_time - t < 5
+    ]
+
+    # Extract just the unique ports
+    unique_ports = set([port for port, t in port_scan_tracker[src_ip]])
+
+    if len(unique_ports) > 10:
+        log_threat("PORT SCAN DETECTED", src_ip)
+
+Count: {len(syn_tracker[src_ip])}")
+
+            # Keep only the SYNs from the last 5 seconds
+            syn_tracker[src_ip] = [t for t in syn_tracker[src_ip] if current_time - t < 5]
+
+            # If SYNs exceed 15 in 5 seconds from same IP → SYN flood likely
+            if len(syn_tracker[src_ip]) > 5:
+                log_threat("POSSIBLE SYN FLOOD", src_ip)
+
+# --- PORT SCAN DETECTION ---
+from collections import defaultdict
+
+port_scan_tracker = defaultdict(list)
+
+# This goes inside detect_threats(packet):
+if packet.haslayer(IP) and packet.haslayer(TCP):
+    src_ip = packet[IP].src
+    dst_port = packet[TCP].dport
+    current_time = time.time()
+
+    # Track accessed ports per IP
+    port_scan_tracker[src_ip].append((dst_port, current_time))
+
+    # Remove entries older than 5 seconds
+    port_scan_tracker[src_ip] = [
+        (port, t) for port, t in port_scan_tracker[src_ip] if current_time - t < 5
+    ]
+
+    # Extract just the unique ports
+    unique_ports = set([port for port, t in port_scan_tracker[src_ip]])
+
+    if len(unique_ports) > 10:
+        log_threat("PORT SCAN DETECTED", src_ip)
